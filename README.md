@@ -11,7 +11,7 @@
 ```
 Your answer...
 ```
-**2. What’s the linear complexity of the above solution? (approximately)**
+**2. What’s the computational complexity of the above solution? (approximately)**
 ```
 Your answer...
 ```
@@ -19,7 +19,7 @@ Your answer...
 ```csharp
 // Your C# refactored code goes here
 ```
-**4. What’s the linear complexity of your solution? (approximately)**
+**4. What’s the computational complexity of your solution? (approximately)**
 ```
 Your answer...
 ```
@@ -56,7 +56,7 @@ Your answer...
 ```
 Your answer...
 ```
-**2. What’s the linear complexity of the above solution? (approximately)**
+**2. What’s the computational complexity of the above solution? (approximately)**
 ```
 Your answer...
 ```
@@ -64,7 +64,7 @@ Your answer...
 ```csharp
 // Your C# refactored code goes here
 ```
-**4. What’s the linear complexity of your solution? (approximately)**
+**4. What’s the computational complexity of your solution? (approximately)**
 ```
 Your answer...
 ```
@@ -106,7 +106,7 @@ Your answer...
 ```csharp
 // Your C# code goes here
 ```
-**2. What’s the linear complexity of your solution? (approximately)**
+**2. What’s the computational complexity of your solution? (approximately)**
 ```
 Your answer...
 ```
