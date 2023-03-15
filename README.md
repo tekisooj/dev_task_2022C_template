@@ -3,17 +3,18 @@
 
 [![Kroon](kroon.svg)](https://kroonstudio.com/)
 
-> Your Name goes here...
+> Teodora Vasić
 
 # A) AN ORDERING FUNCTION:
 ### Questions:
 **1. Which requirements are not satisfied in the above solution?**
 ```
-Your answer...
+Requirement number 4 is not satisfied. If some books are in the bookList but their id is not in the orderedIds, this
+book isn't contained in the result list. The method isn't optimised, so it can't work fast enough for large input.
 ```
 **2. What’s the computational complexity of the above solution? (approximately)**
 ```
-Your answer...
+Computational complexity is O(n*m) where n is number of ids in orderIds and m is number of books in bookList.
 ```
 **3. Can you refactor the above function in order to satisfy all requirements without changing the input and output structure?**
 ```csharp
@@ -34,11 +35,11 @@ Your answer...
 ### Questions:
 **1. Which requirements are not satisfied in the above solution?**
 ```
-Your answer...
+The search is not case sensitive. The response could contain duplicates. The method is not optimised.
 ```
 **2. What’s the computational complexity of the above solution? (approximately)**
 ```
-Your answer...
+The computational complexity is O(m*n) where m is number of search terms and n is number of books.
 ```
 **3. Can you refactor the above function in order to satisfy all requirements without changing the input and output structure?**
 ```csharp
