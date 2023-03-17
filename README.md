@@ -177,6 +177,7 @@ public static List<Book> SearchList(List<Book> bookList, List<string> searchTerm
 		return results;
 	}
 ```
+---
 **4. What’s the computational complexity of your solution? (approximately)**
 ```
 The computational complexity would be O(n*m) where n is the number of books and m the number of terms.
