@@ -55,6 +55,85 @@ Since filling the dictionary is O(m) for the first loop and O(n) for the second 
 **5. Can you write a unit test for the above function?**
 ```csharp
 // Your C# unit test goes here
+ [Test]
+    public void TestReturnsBooklistWhenOrderidsEmpty()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        books.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        books.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+        List<int> orderedIds = new List<int>
+        {
+          //  44, 1973, 23, 9
+        };
+        List<Book> orderedBooks = OrderList(books, orderedIds);
+        
+        Assert.Equals(books, orderedBooks);
+    }
+    [Test]
+    public void TestReturnsEmptyWhenBooksEmpty()
+    {
+        List<Book> books = new List<Book>();
+        List<int> orderedIds = new List<int>
+        { 
+            44, 1973, 23, 9
+        };
+        List<Book> orderedBooks = OrderList(books, orderedIds);
+        
+        Assert.Equals(new List<Book>(), orderedBooks);
+    }
+    
+    [Test]
+    public void ReturnsCorrectOrder()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        books.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        books.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+        List<int> orderedIds = new List<int>
+        { 
+            44, 1973, 23, 9
+        };
+        List<Book> orderedBooks = OrderList(books, orderedIds);
+        
+        List<Book> expected = new List<Book>();
+        expected.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        expected.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+                                                      
+        expected.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        expected.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+      
+        
+        Assert.Equals(expected, orderedBooks);
+    }
+    
+    [Test]
+    public void AppendsBookToEndIfIdNotInOrderedIds()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        books.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        books.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+        List<int> orderedIds = new List<int>
+        { 
+            44, 1973, 23
+        };
+        List<Book> orderedBooks = OrderList(books, orderedIds);
+        
+        List<Book> expected = new List<Book>();
+        expected.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        expected.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+                                                      
+        expected.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        expected.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+      
+        
+        Assert.Equals(expected, orderedBooks);
+    }
+
 ```
 
 ---
@@ -75,6 +154,12 @@ The computational complexity is O(m*n) where m is number of search terms and n i
 
 public static List<Book> SearchList(List<Book> bookList, List<string> searchTerms)
 	{
+	
+		if(searchTerms.Count == 0)
+		{
+			return bookList;
+		}
+		
 		List<Book> results = new List<Book>();
 		
 		foreach(Book book in bookList)
@@ -100,7 +185,123 @@ The computational complexity would be O(n*m) where n is the number of books and 
 ```csharp
 // Your C# unit tests go here
 ```
+ 
+    [Test]
+    public void SearchEmptyBookList()
+    {
+        List<Book> books = new List<Book>();
+     
+        
+        List<string> searchTerms = new List<string>()
+        {
+            "woman", "dolor sit"
+        };
 
+        List<Book> result = SearchList(books, searchTerms);
+
+        Assert.Equals(books, result);
+    }
+    
+    [Test]
+    public void SearchEmptyTermListReturnsAllBooks()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        books.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        books.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+
+
+
+        List<string> searchTerms = new List<string>();
+
+        List<Book> result = SearchList(books, searchTerms);
+
+        Assert.Equals(books, result);
+    }
+    
+    
+      
+    [Test]
+    public void FindsTermMidWord()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 1, Title = "abcwomanabc", Description = "desc" });
+        books.Add(new Book { Id = 2, Title = "title", Description = "description" });
+
+
+        List<string> searchTerms = new List<string>()
+        {
+            "woman", "dolor sit"
+        };
+        List<Book> result = SearchList(books, searchTerms);
+
+        List<Book> expected = new List<Book>();
+        expected.Add(new Book { Id = 1, Title = "abcwomanabc", Description = "desc" });
+
+
+        Assert.Equals(expected, result);
+        
+    }
+
+    
+    [Test]
+    public void IsNotCaseSensitive()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        books.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        books.Add(new Book { Id = 9, Title = "Blindness", Description = "Consectetur adipiscing elit..." });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor aliqua..." });
+        books.Add(new Book { Id = 1, Title = "woman", Description = "Test desctiption..." });
+        books.Add(new Book { Id = 2, Title = "Test Title", Description = "DOLOR Sit" });
+
+
+        List<string> searchTerms = new List<string>()
+        {
+            "WOMAN", "dolor sit"
+        };
+        List<Book> result = SearchList(books, searchTerms);
+
+        List<Book> expected = new List<Book>();
+        
+        
+        expected.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet..." });
+        expected.Add(new Book { Id = 44, Title = "The woman from Zagreb", Description = "Lorem ipsum consectetur..." });
+        expected.Add(new Book { Id = 1, Title = "woman", Description = "Test desctiption..." });
+        expected.Add(new Book { Id = 2, Title = "Test Title", Description = "DOLOR Sit" });
+
+        Assert.Equals(expected, result);
+    }
+    
+      
+    [Test]
+    public void NoDuplicates()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 1, Title = "woman", Description = "dolor sit woman" });
+        books.Add(new Book { Id = 2, Title = "title", Description = "description" });
+
+
+        List<string> searchTerms = new List<string>()
+        {
+            "woman", "dolor sit"
+        };
+        List<Book> result = SearchList(books, searchTerms);
+
+        List<Book> expected = new List<Book>();
+        expected.Add(new Book { Id = 1, Title = "woman", Description = "dolor sit woman" });
+
+
+        Assert.Equals(expected, result);
+        
+    }
+    
+    
+    
+    
+    
+    
 ---
 
 # C) A RANKING FUNCTION:
@@ -109,12 +310,13 @@ The computational complexity would be O(n*m) where n is the number of books and 
 **1. Can you write the function as described in the above requirements?**
 ```csharp
 // Your C# code goes here
-	public static List<Book> TopRankList(List<Book> bookList, int rankListLength)
+		public static List<Book> TopRankList(List<Book> bookList, int rankListLength)
 	{
 	// Add code to find top ranked items
 		PriorityQueue<Book, decimal> q = new PriorityQueue<Book, decimal>();
 		int lowest = bookList[0].Upvotes - bookList[0].Downvotes;
 		int highest = lowest;
+		int n = bookList.Count;
 		foreach(var book in bookList){
 			lowest = lowest > (book.Upvotes - book.Downvotes) ? (book.Upvotes - book.Downvotes) : lowest;
 			highest = highest < (book.Upvotes - book.Downvotes) ? (book.Upvotes - book.Downvotes) : highest;
@@ -124,17 +326,16 @@ The computational complexity would be O(n*m) where n is the number of books and 
 		
 		foreach(var book in bookList)
 		{
-			var udPoints = (book.Upvotes - book.Downvotes)*1.0/difference * 10.0;
+			var udPoints = (book.Upvotes - book.Downvotes - lowest)*1.0/difference * 10.0;
 			q.Enqueue(book, -(book.PublisherStars + (decimal)udPoints));		
 		}
 		List<Book> res = new List<Book>();
-		for(int i=0;i< rankListLength; i++){
+		for(int i=0;i< rankListLength && i<n; i++){
 			res.Add(q.Dequeue());
 		}
 		
 		return res;
 	}
-```
 **2. What’s the computational complexity of your solution? (approximately)**
 ```
 Computational complexity is O(n*log(n)), where n is number of books.
@@ -142,6 +343,105 @@ Computational complexity is O(n*log(n)), where n is number of books.
 **3. Can you write a unit tests for your function?**
 ```csharp
 // Your C# unit test goes here.
+
+
+    [Test]
+    public void RankingMethodEmptyList()
+    {
+        List<Book> books = new List<Book>();
+        
+    
+        List<Book> result = TopRankList(books, 5);
+   
+        Assert.Equals(books, result);
+        
+    }
+    [Test]
+    public void RankingMethodZeroRankingListLength()
+    {
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet...", Downvotes = 238, PublisherStars = 8.0m, Upvotes = 5439 });
+        books.Add(new Book { Id = 9, Title = "Craziness", Description = "Consectetur adipiscing	elit...", Downvotes = 98, PublisherStars = 6.5m, Upvotes = 4109 });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor incididunt ut labore et magna...", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Before the end", Description = "The total albus solimun...", Downvotes = 543, PublisherStars = 3.5m, Upvotes = 332 });
+        books.Add(new Book { Id = 1973, Title = "Isolation", Description = "Luncididunt ut agna	aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Cards", Description = "Labore et dolore magna aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+
+    
+        List<Book> result = TopRankList(books, 0);
+   
+        Assert.Equals(0, result.Count);
+        
+    }
+    [Test]
+    public void RankingMethodCorrectRankingListLength()
+    {
+        int rankingListLength = 4;
+        
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet...", Downvotes = 238, PublisherStars = 8.0m, Upvotes = 5439 });
+        books.Add(new Book { Id = 9, Title = "Craziness", Description = "Consectetur adipiscing	elit...", Downvotes = 98, PublisherStars = 6.5m, Upvotes = 4109 });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor incididunt ut labore et magna...", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Before the end", Description = "The total albus solimun...", Downvotes = 543, PublisherStars = 3.5m, Upvotes = 332 });
+        books.Add(new Book { Id = 1973, Title = "Isolation", Description = "Luncididunt ut agna	aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Cards", Description = "Labore et dolore magna aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+    
+        List<Book> result = TopRankList(books, rankingListLength);
+   
+        Assert.Equals(result.Count, rankingListLength);
+        
+    }
+
+    
+    [Test]
+    public void RankingListLengthGreaterThanBookListLength()
+    {
+        int rankingListLength = 8;
+        
+        List<Book> books = new List<Book>();
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet...", Downvotes = 238, PublisherStars = 8.0m, Upvotes = 5439 });
+        books.Add(new Book { Id = 9, Title = "Craziness", Description = "Consectetur adipiscing	elit...", Downvotes = 98, PublisherStars = 6.5m, Upvotes = 4109 });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor incididunt ut labore et magna...", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Before the end", Description = "The total albus solimun...", Downvotes = 543, PublisherStars = 3.5m, Upvotes = 332 });
+        books.Add(new Book { Id = 1973, Title = "Isolation", Description = "Luncididunt ut agna	aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Cards", Description = "Labore et dolore magna aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+    
+        List<Book> result = TopRankList(books, rankingListLength);
+   
+        Assert.Equals(result, books);
+        
+    }
+
+    [Test]
+    public void CorrectRanking()
+    {
+        int rankingListLength = 5;
+        
+        List<Book> books = new List<Book>();
+      
+        books.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet...", Downvotes = 238, PublisherStars = 8.0m, Upvotes = 5439 });
+        books.Add(new Book { Id = 9, Title = "Craziness", Description = "Consectetur adipiscing	elit...", Downvotes = 98, PublisherStars = 6.5m, Upvotes = 4109 });
+        books.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor incididunt ut labore et magna...", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3450 });
+        books.Add(new Book { Id = 1973, Title = "Before the end", Description = "The total albus solimun...", Downvotes = 543, PublisherStars = 3.5m, Upvotes = 332 });
+        books.Add(new Book { Id = 1973, Title = "Isolation", Description = "Luncididunt ut agna	aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        books.Add(new Book { Id = 1973, Title = "Cards", Description = "Labore et dolore magna aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3700 });
+        List<Book> result = TopRankList(books, rankingListLength);
+   
+        List<Book> expected = new List<Book>();
+        expected.Add(new Book { Id = 23, Title = "The divine Comedy", Description = "Lorem ipsum dolor sit amet...", Downvotes = 238, PublisherStars = 8.0m, Upvotes = 5439 });
+        expected.Add(new Book { Id = 1973, Title = "Cards", Description = "Labore et dolore magna aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        expected.Add(new Book { Id = 9, Title = "Craziness", Description = "Consectetur adipiscing	elit...", Downvotes = 98, PublisherStars = 6.5m, Upvotes = 4109 });
+        expected.Add(new Book { Id = 1973, Title = "Isolation", Description = "Luncididunt ut agna	aliqua.", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+        expected.Add(new Book { Id = 1973, Title = "Faust", Description = "Tempor incididunt ut labore et magna...", Downvotes = 80, PublisherStars = 7.5m, Upvotes = 3455 });
+       
+     
+        Assert.Equals(result, books);
+        
+    }
+
+    
+    
+    
 ```
 
 ---
