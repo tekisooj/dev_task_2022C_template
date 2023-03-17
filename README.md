@@ -19,10 +19,38 @@ Computational complexity is O(n*m) where n is number of ids in orderIds and m is
 **3. Can you refactor the above function in order to satisfy all requirements without changing the input and output structure?**
 ```csharp
 // Your C# refactored code goes here
+
+
+public static List<Book> OrderList(List<Book> bookList, List<int> orderedIds)
+	{
+		
+		Dictionary<int, int> idMap = new Dictionary<int, int>();
+		int n = orderedIds.Count;
+		for(int i=0; i<n;i++){
+			
+			idMap.Add(orderedIds[i], i);
+		}
+		int m = bookList.Count;
+		for(int i=0; i<m; i++){
+			int currentBookId = bookList[i].Id;
+			if(!idMap.ContainsKey(currentBookId)){
+				idMap.Add(bookList[i].Id, n);
+				n = n+1;
+			}
+				
+		}
+		
+		bookList.Sort((x,y) => (idMap[x.Id] - idMap[y.Id]));
+		
+		return bookList;
+	}
+
+
 ```
 **4. What’s the computational complexity of your solution? (approximately)**
 ```
-Your answer...
+Computational complexity would be O(n*log(n)), where n is number of books, since that is the sorting complexity. All used dictionary operations are O(1) amortised.
+Since filling the dictionary is O(m) for the first loop and O(n) for the second one, it doesn't affect overall complexity of O(n*log(n)). 
 ```
 **5. Can you write a unit test for the above function?**
 ```csharp
@@ -35,7 +63,7 @@ Your answer...
 ### Questions:
 **1. Which requirements are not satisfied in the above solution?**
 ```
-The search is not case sensitive. The response could contain duplicates. The method is not optimised.
+The search is not case sensitive. The response could contain duplicates. 
 ```
 **2. What’s the computational complexity of the above solution? (approximately)**
 ```
@@ -44,10 +72,29 @@ The computational complexity is O(m*n) where m is number of search terms and n i
 **3. Can you refactor the above function in order to satisfy all requirements without changing the input and output structure?**
 ```csharp
 // Your C# refactored code goes here
+
+public static List<Book> SearchList(List<Book> bookList, List<string> searchTerms)
+	{
+		List<Book> results = new List<Book>();
+		
+		foreach(Book book in bookList)
+		{
+			foreach(string term in searchTerms)
+			{
+				if(book.Title.ToLower().Contains(term) || book.Description.ToLower().Contains(term))
+				{
+					results.Add(book);
+					continue;
+				}
+			}
+		}
+	
+		return results;
+	}
 ```
 **4. What’s the computational complexity of your solution? (approximately)**
 ```
-Your answer...
+The computational complexity would be O(n*m) where n is the number of books and m the number of terms.
 ```
 **5. Can you write a unit test for the above function?**
 ```csharp
@@ -65,7 +112,7 @@ Your answer...
 ```
 **2. What’s the computational complexity of your solution? (approximately)**
 ```
-Your answer...
+Computational complexity is O(n*log(n)), where n is number of books.
 ```
 **3. Can you write a unit tests for your function?**
 ```csharp
