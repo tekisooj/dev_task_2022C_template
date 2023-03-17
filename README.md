@@ -109,6 +109,31 @@ The computational complexity would be O(n*m) where n is the number of books and 
 **1. Can you write the function as described in the above requirements?**
 ```csharp
 // Your C# code goes here
+	public static List<Book> TopRankList(List<Book> bookList, int rankListLength)
+	{
+	// Add code to find top ranked items
+		PriorityQueue<Book, decimal> q = new PriorityQueue<Book, decimal>();
+		int lowest = bookList[0].Upvotes - bookList[0].Downvotes;
+		int highest = lowest;
+		foreach(var book in bookList){
+			lowest = lowest > (book.Upvotes - book.Downvotes) ? (book.Upvotes - book.Downvotes) : lowest;
+			highest = highest < (book.Upvotes - book.Downvotes) ? (book.Upvotes - book.Downvotes) : highest;
+		}
+		
+		int difference = highest - lowest;
+		
+		foreach(var book in bookList)
+		{
+			var udPoints = (book.Upvotes - book.Downvotes)*1.0/difference * 10.0;
+			q.Enqueue(book, -(book.PublisherStars + (decimal)udPoints));		
+		}
+		List<Book> res = new List<Book>();
+		for(int i=0;i< rankListLength; i++){
+			res.Add(q.Dequeue());
+		}
+		
+		return res;
+	}
 ```
 **2. What’s the computational complexity of your solution? (approximately)**
 ```
